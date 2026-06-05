@@ -426,7 +426,24 @@ export default function QuizPlayer() {
                             if (isCurrent) { badgeBg = "#185FA5"; badgeColor = "#fff"; }
                             else if (isAnswered) { badgeBg = "#E6F1FB"; badgeColor = "#185FA5"; borderStyle = "1px solid rgba(24, 95, 165, 0.2)"; }
                             return (
-                                <button key={index} onClick={() => setCurrent(index)} style={{ aspectRatio: "1/1", borderRadius: "10px", display: "flex", alignItems: "center", justifyCenter: "center", fontSize: "13px", fontWeight: isCurrent || isAnswered ? "600" : "500", background: badgeBg, color: badgeColor, border: borderStyle, cursor: "pointer", transition: "all 0.15s ease" }}>
+                                <button
+                                    key={index}
+                                    onClick={() => setCurrent(index)}
+                                    style={{
+                                        aspectRatio: "1/1",
+                                        borderRadius: "10px",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        fontSize: "13px",
+                                        fontWeight: isCurrent || isAnswered ? "600" : "500",
+                                        background: badgeBg,
+                                        color: badgeColor,
+                                        border: borderStyle,
+                                        cursor: "pointer",
+                                        transition: "all 0.15s ease"
+                                    }}
+                                >
                                     {index + 1}
                                 </button>
                             );

@@ -61,6 +61,7 @@ export default function Dashboard() {
 
 	const productivityPrediction =
 		dashboard?.productivity_prediction || "Unknown";
+		dashboard?.productivity || "Unknown";
 
 	const isLoading = !error && dashboard == null;
 	const firstName = userInfo?.first_name || userInfo?.name || "there";

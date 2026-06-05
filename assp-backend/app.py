@@ -552,16 +552,12 @@ def get_dashboard(user_id):
             WHERE ss.user_id = %s
             AND (
                 planned_date = %s
-                OR (
-                    actual_start IS NOT NULL
-                    AND DATE(actual_start) = %s
-                )
             )
             ORDER BY
             COALESCE(actual_start, CONCAT(planned_date, ' ', start_time), created_at) ASC
             LIMIT 20
             """,
-            (user_id, selected_date, selected_date),
+            (user_id, selected_date),
         )
         today_sessions = local_cursor.fetchall() or []
         print('today_sessions', today_sessions)
@@ -652,8 +648,9 @@ def get_dashboard(user_id):
                 COALESCE(SUM(actual_duration), 0) AS total_seconds
             FROM StudySession
             WHERE user_id = %s
-            AND DATE(actual_start) = CURDATE()
-            AND status = 'completed'
+            AND DATE(actual_start) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+            AND DATE(actual_start) <= CURDATE()
+            AND STATUS = 'completed'
             """
 
         local_cursor.execute(today_query, (user_id,))
@@ -663,6 +660,7 @@ def get_dashboard(user_id):
 
         if today_result and today_result["total_seconds"]:
             study_minutes = today_result["total_seconds"] / 60
+            print('study_minutes', study_minutes)
 
         # --- Get latest real quiz score ---
         local_cursor.execute(
@@ -736,10 +734,12 @@ def get_dashboard(user_id):
             #)
 
             # keep between 1 and 5
-            stress_level = max(1, min(5, stress_level))
+            stress_level = max(1, min(5, avg_stress_7d))
+            print('test', study_hours, latest_quiz_score, stress_level)
 
             input_data = pd.DataFrame([{
-                "productivity_score": productivity_score,
+                "study_hours_per_day": study_hours,
+                "exam_score": latest_quiz_score,
                 "stress_level": stress_level
             }])
 
@@ -781,6 +781,17 @@ def get_dashboard(user_id):
             recommendation = (
                 "Try shorter focused study sessions to improve concentration."
             )
+            
+        productivity = ""
+        productivity_score = int(productivity_score)
+        if (productivity_score <= 45):
+            productivity = "Low Productivity"
+        elif productivity_score> 45 and productivity_score <= 65:
+            productivity = "Medium Productivity"
+        elif productivity_score > 65:
+            productivity = "High Productivity"
+        else:
+            productivity = "Unkown"
 
         return jsonify(
             {
@@ -802,7 +813,8 @@ def get_dashboard(user_id):
                 "subjects": _json_safe_obj(subjects_list),
                 "subject_breakdown": _json_safe_obj(subject_breakdown),
                 "recommendation": recommendation,
-                "productivity_prediction": productivity_score
+                "productivity_prediction": productivity_score,
+                "productivity" : productivity
             }
         )
 
