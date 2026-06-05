@@ -60,7 +60,6 @@ export default function Dashboard() {
 	const recommendation = dashboard?.recommendation || "No recommendation yet.";
 
 	const productivityPrediction =
-		dashboard?.productivity_prediction || "Unknown";
 		dashboard?.productivity || "Unknown";
 
 	const isLoading = !error && dashboard == null;
