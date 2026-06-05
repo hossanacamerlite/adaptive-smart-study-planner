@@ -727,13 +727,13 @@ def get_dashboard(user_id):
 
 
             # dynamic stress calculation
-            stress_level = round(
-                (
-                    (study_minutes / 60) * 0.8 +
-                    quiz_attempts_today * 0.5 +
-                    (100 - latest_quiz_score) * 0.03
-                )
-            )
+            # stress_level = round(
+            #    (
+            #        (study_minutes / 60) * 0.8 +
+            #        quiz_attempts_today * 0.5 +
+            #        (100 - latest_quiz_score) * 0.03
+            #    )
+            #)
 
             # keep between 1 and 5
             stress_level = max(1, min(5, stress_level))
@@ -883,77 +883,22 @@ def add_recommendation():
 
     return {"message": "Recommendation added"}
 
-#@app.route("/predict", methods=["POST"])
-#def predict():
-#    data = request.json
-#
-#    study_hours = data["study_hours"]
-#    quiz_score = data["quiz_score"]
-#    stress_level = data["stress_level"]
-#    attempt_id = data.get("attempt_id")
-#
-#    predicted_productivity = productivity.predict_productivity(study_hours, quiz_score, stress_level)
-#    print('predicted_productivity', predicted_productivity)
-#
-#    #predicted_productivity = max(0, min(1, predicted_productivity))
-#
-#    query = """
-#        UPDATE quizattempt
-#        SET productivity_level = %s
-#        WHERE attempt_id = %s
-#    """
-#
-#    cursor.execute(query, (predicted_productivity, attempt_id))
-#    db.commit()
-#
-#    return jsonify({
-#        "predicted_productivity": float(predicted_productivity),
-#        "success": True
-#    })
-#
-
-#@app.route("/predict-productivity", methods=["POST"])
-#def predict_productivity():
-#    try:
-#        data = request.get_json()
-#
-#        study_hours = float(data.get("study_hours", 0))
-#        quiz_score = float(data.get("quiz_score", 0))
-#        stress_level = float(data.get("stress_level", 0))
-#
-#        # load model
-#        with open("productivity_model.pkl", "rb") as f:
-#            model = pickle.load(f)
-#
-#        input_data = pd.DataFrame([{
-#            "study_hours": study_hours,
-#            "quiz_score": quiz_score,
-#            "stress_level": stress_level
-#        }])
-#
-#        prediction = model.predict(input_data)[0]
-#
-#        return jsonify({
-#            "success": True,
-#            "productivity_score": round(float(prediction), 2)
-#        })
-#
-#    except Exception as e:
-#        return jsonify({
-#            "success": False,
-#            "error": str(e)
-#        }), 500
-
 @app.route("/predict-productivity", methods=["POST"])
 def predict_productivity():
     try:
         data = request.get_json()
 
-        productivity_score = float(data.get("productivity_score", 0))
+        data = request.get_json()
+
+        # Get the REAL ingredients from the frontend
+        study_hours = float(data.get("study_hours_per_day", 0))
+        exam_score = float(data.get("exam_score", 0))
         stress_level = float(data.get("stress_level", 3))
 
+        # Pass them straight to the model
         input_data = pd.DataFrame([{
-            "productivity_score": productivity_score,
+            "study_hours_per_day": study_hours,
+            "exam_score": exam_score,
             "stress_level": stress_level
         }])
 
@@ -961,7 +906,7 @@ def predict_productivity():
 
         return jsonify({
             "success": True,
-            "productivity_prediction": prediction
+            "productivity_prediction": round(float(prediction), 2)
         })
 
     except Exception as e:
