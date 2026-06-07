@@ -10,6 +10,7 @@ Before running the project, ensure the following software is installed:
 * Git
 
 ---
+# Installation Guide
 
 ## Clone Repository
 
