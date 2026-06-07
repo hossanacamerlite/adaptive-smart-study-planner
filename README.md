@@ -25,12 +25,12 @@ cd adaptive-smart-study-planner
 
 ## Environment Variables
 
-Create and configure the `.env` file with the required environment variables.
-
+Within the folder `assp-frontend`, copy the `.env.example` file and paste within `assp-frontend` and rename it to `.env`
 The following information must be configured:
 
 * MySQL database credentials
-* Google Gemini API key
+* Google OAuth Client and Secret Key (Refer to this to obtain your [Google Client and Secret key](https://www.youtube.com/watch?v=D8DMj2lQMwo))
+* Google Gemini API key (Refer to this to obtain your [Gemini API Key](https://ai.google.dev/gemini-api/docs/api-key))
 
 **Note:** The AI Quiz Generation feature requires a valid Google Gemini API key.
 
@@ -66,6 +66,10 @@ cd assp-frontend
 
 npm install
 
+npx prisma generate
+
+npx prisma db push
+
 npm run dev
 ```
 
@@ -79,12 +83,18 @@ Ensure MySQL Server is installed and running.
 
 Synchronize Prisma with the database schema using:
 
+To update your database:
+```bash
+npx prisma generate
+
+npx prisma db push
+```
+
+To synchronise `assp-frontend/prisma/schema.prisma`:
 ```bash
 npx prisma generate
 
 npx prisma db pull
-
-npx prisma db push
 ```
 
 ---
