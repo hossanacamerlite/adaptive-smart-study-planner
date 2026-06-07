@@ -29,9 +29,42 @@ cd adaptive-smart-study-planner
 Within the folder `assp-frontend`, copy the `.env.example` file and paste within `assp-frontend` and rename it to `.env`
 The following information must be configured:
 
-* MySQL database credentials
-* Google OAuth Client and Secret Key (Refer to this to obtain your [Google Client and Secret key](https://www.youtube.com/watch?v=D8DMj2lQMwo))
-* Google Gemini API key (Refer to this to obtain your [Gemini API Key](https://ai.google.dev/gemini-api/docs/api-key))
+### MySQL database credentials
+* Please obtain your database username and password and update their respective fields it in the `.env` file.
+
+Fields to be updated:
+```bash
+DATABASE_URL="mysql://your_database_username:your_database_password@localhost:3306/adaptive_study_planner"
+DATABASE_USER="your_database_username"
+DATABASE_PASSWORD="your_database_password"
+```
+
+### Google OAuth Client and Secret Key
+
+Note the **insturction** below first and then refer to this to obtain your [Google Client and Secret key](https://www.youtube.com/watch?v=D8DMj2lQMwo))
+
+**Google Client and Secret key instruction:**
+
+In the youtube tutorial above:
+
+At timeline `0:41`, please add the following fields before creating the OAuth Client:
+<img width="564" height="586" alt="image" src="https://github.com/user-attachments/assets/122cd1c5-87e1-4117-afb4-16ee8ab14575" />
+
+At timeline `0:45`, please take note of your google client and secret key, copy and paste them into your `.env` file in their respective fields. You may stop the video once you have your client and secret keys
+
+Fields to be updated:
+```bash
+GOOGLE_CLIENT_ID="Your Google Client Key"
+GOOGLE_CLIENT_SECRET="Your Google Secret Key"
+```
+
+### Google Gemini API key 
+(Refer to this to obtain your [Gemini API Key](https://ai.google.dev/gemini-api/docs/api-key))
+
+Fields to be updated:
+```bash
+GEMINI_API_KEY="Your Google Gemini Key"
+```
 
 **Note:** The AI Quiz Generation feature requires a valid Google Gemini API key.
 
@@ -46,6 +79,7 @@ Open a terminal and run:
 cd assp-backend
 
 python -m venv venv
+(Make sure your python version is at least 3.12++)
 
 .\venv\Scripts\activate
 
@@ -63,6 +97,8 @@ The backend server should start successfully.
 Open a second terminal and run:
 
 ```bash
+(Ensure your terminal directory is in the `adaptive-smart-study-planner` repository first
+
 cd assp-frontend
 
 npm install
@@ -74,29 +110,7 @@ npx prisma db push
 npm run dev
 ```
 
-The frontend development server should start successfully.
-
----
-
-## Database Configuration
-
-Ensure MySQL Server is installed and running.
-
-Synchronize Prisma with the database schema using:
-
-To update your database:
-```bash
-npx prisma generate
-
-npx prisma db push
-```
-
-To synchronise `assp-frontend/prisma/schema.prisma`:
-```bash
-npx prisma generate
-
-npx prisma db pull
-```
+The frontend development server should start successfully. Please view the system at 
 
 ---
 
@@ -178,9 +192,29 @@ Verify the database configuration in the `.env` file and synchronize Prisma with
 ```bash
 npx prisma generate
 
-npx prisma db pull
+npx prisma db push
+```
+
+---
+
+## Database Configuration
+
+Ensure MySQL Server is installed and running.
+
+Synchronize Prisma with the database schema using:
+
+To update your database:
+```bash
+npx prisma generate
 
 npx prisma db push
+```
+
+To synchronise `assp-frontend/prisma/schema.prisma`:
+```bash
+npx prisma generate
+
+npx prisma db pull
 ```
 
 ---
@@ -213,41 +247,3 @@ http://localhost:3000
 #### Solution
 
 Verify that the Gemini API key is correctly configured and ensure the device has an active internet connection.
-
-```
-```
-
-
-
-
-
-
-# Pre Requisite
-Python 3.12
-
-# Have 1 terminal open for backend and another for frontend
-
-# To Start the backend server:
-```
-cd assp-backend
-python -m venv venv
-.\venv\Scripts\activate
-pip install -r requirements.txt
-python app.py
-```
-
-# To Start the frontend server:
-```
-cd assp-frontend
-npm install
-npm run dev
-```
-
-pip freeze > requirements.txt
-
-# To update DB
-```
-npx prisma generate
-npx prisma db pull
-npx prisma db push
-```
