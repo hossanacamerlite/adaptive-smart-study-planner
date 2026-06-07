@@ -83,6 +83,16 @@ export default function StudySessionModal({ session, closeForm }) {
   // GENERATE QUIZ
   const handleGenerateQuiz = async () => {
     try {
+      let cleanNotes = notes;
+      if (typeof notes === "object" && notes !== null) {
+        cleanNotes = notes.text || notes.content || "";
+      }
+
+      if (!cleanNotes || cleanNotes.toString().trim() === "[object Object]") {
+        alert("Please enter actual text notes before generating a quiz.");
+        return;
+      }
+
       const response = await fetch(
         "http://localhost:5000/api/quiz/generate",
         {
@@ -90,7 +100,11 @@ export default function StudySessionModal({ session, closeForm }) {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ notes }),
+          body: JSON.stringify({ 
+            notes: notes,
+            session_id: session.session_id,
+            user_id: session.user_id || 1
+          }),
         }
       );
 

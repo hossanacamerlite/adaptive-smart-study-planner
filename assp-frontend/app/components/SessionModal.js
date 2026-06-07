@@ -137,11 +137,27 @@ const SessionModal = ({ sessionId, session, closeModal }) => {
 			const userId = user?.data?.user_id;
 			setIsGenerating(true);
 			await saveStudyNote(note);
+
+			let plainTextNotes = "";
+			if (typeof note === "object" && note !== null) {
+				// Check common rich-text object attributes depending on your framework
+				plainTextNotes = note.text || note.html || note.target?.value || JSON.stringify(note);
+			} else {
+				plainTextNotes = String(note);
+			}
+
+			// 2. Stop execution if it's still broken or empty
+			if (!plainTextNotes.trim() || plainTextNotes === "[object Object]") {
+				alert("The notes content is empty or unreadable. Please type some text first!");
+				setIsGenerating(false);
+				return;
+			}
+
 			const response = await fetch("http://localhost:5000/generate-questions", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					notes: String(note),
+					notes: plainTextNotes,
 					session_id: session.session_id,
 					user_id: userId
 				}),

@@ -14,7 +14,6 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 @quiz_bp.route('/generate_quiz', methods=['POST'])
 def generate_quiz():
     try:
-        print(GEMINI_API_KEY)
         data = request.get_json()
         notes = data.get("notes")
 
