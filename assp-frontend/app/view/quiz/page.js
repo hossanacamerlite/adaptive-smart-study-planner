@@ -117,7 +117,7 @@ export default function QuizPage() {
               const percentage = attempted ? Math.round((score / total) * 100) : 0;
 
               return (
-                <div key={q.quiz_id} className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-xl transition-all duration-300">
+                <div key={q.quiz_id} className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 my-2 hover:shadow-xl transition-all duration-300">
                   <div className="flex justify-between items-start mb-5">
 
                     <div>
